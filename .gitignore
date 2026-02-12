@@ -10,3 +10,5 @@ env/
 .idea/
 .vscode/
 uploads/*
+node_modules
+.next
