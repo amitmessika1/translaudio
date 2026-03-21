@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import shutil
 from pathlib import Path
 import whisper
+import asyncio
 
 app = FastAPI()
 
@@ -45,7 +46,11 @@ async def upload_file(file: UploadFile = File(...)):
         
         # תמלול הקובץ
         print(f"מתחיל תמלול של {file.filename}...")
-        result = whisper_model.transcribe(str(file_path))
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(
+            None,
+            lambda: whisper_model.transcribe(str(file_path))
+        )
         print("Detected language:", result.get("language"))
 
         transcription = result["text"]
