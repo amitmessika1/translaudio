@@ -4,7 +4,12 @@ import shutil
 from pathlib import Path
 import whisper
 import asyncio
+from dotenv import load_dotenv
+import os
+from openai import OpenAI
 
+load_dotenv()
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app = FastAPI()
 
 # טעינת מודל Whisper (פעם אחת בהתחלה)
@@ -21,6 +26,22 @@ ALLOWED_AUDIO_EXTENSIONS = {
     ".mp3", ".wav", ".m4a", ".flac", ".aac", 
     ".ogg", ".wma", ".opus", ".aiff", ".ape"
 }
+
+def translate_text(text: str, source_language: str, target_language: str) -> str:
+    response = openai_client.responses.create(
+        model="gpt-5.4",
+        instructions=(
+            "You are a professional translator. "
+            "Translate the user's text accurately and naturally. "
+            "Return only the translated text."
+        ),
+        input=(
+            f"Source language: {source_language}\n"
+            f"Target language: {target_language}\n\n"
+            f"Text:\n{text}"
+        ),
+    )
+    return response.output_text.strip()
 
 
 @app.post("/upload")
@@ -69,7 +90,13 @@ async def upload_file(
 
         source_language = result.get("language", "")
         transcription = result["text"]
-        translation = transcription
+        if source_language != target_language:
+            translation = await loop.run_in_executor(
+                None,
+                lambda: translate_text(transcription, source_language, target_language)
+            )
+        else:
+            translation = transcription
         print(f"תמלול הושלם: {len(transcription)} תווים")
         
         # שמירת התמלול לקובץ טקסט
@@ -92,6 +119,13 @@ async def upload_file(
         )    
     except Exception as e:
             error_message = str(e)
+            
+            if "insufficient_quota" in error_message:
+                return JSONResponse(
+                    content={"error": "שירות התרגום לא זמין כרגע: נגמרה מכסת ה-API."},
+                    status_code=502
+                )
+
 
             if "Failed to load audio" in error_message or "Invalid data" in error_message:
                 return JSONResponse(
@@ -113,4 +147,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
