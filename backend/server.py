@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 import shutil
 from pathlib import Path
@@ -24,7 +24,10 @@ ALLOWED_AUDIO_EXTENSIONS = {
 
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    target_language: str = Form("en")
+):
     """
     מקבל קובץ אודיו ושומר אותו בתיקיית uploads
     """
@@ -43,6 +46,17 @@ async def upload_file(file: UploadFile = File(...)):
         file_path = UPLOAD_DIR / file.filename
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+            
+        #  בדיקת גודל קובץ
+        file_size = file_path.stat().st_size
+        print("Saved file size:", file_size)
+
+        if file_size < 1024:  
+            return JSONResponse(
+                content={"error": "הקובץ ריק או קטן מדי לעיבוד"},
+                status_code=400
+            )
+        
         
         # תמלול הקובץ
         print(f"מתחיל תמלול של {file.filename}...")
@@ -53,7 +67,9 @@ async def upload_file(file: UploadFile = File(...)):
         )
         print("Detected language:", result.get("language"))
 
+        source_language = result.get("language", "")
         transcription = result["text"]
+        translation = transcription
         print(f"תמלול הושלם: {len(transcription)} תווים")
         
         # שמירת התמלול לקובץ טקסט
@@ -64,18 +80,30 @@ async def upload_file(file: UploadFile = File(...)):
             content={
                 "message": "קובץ האודיו הועלה ותומלל בהצלחה",
                 "filename": file.filename,
-                "size": file_path.stat().st_size,
+                "size": file_size,
                 "type": file_extension,
+                "source_language": source_language,
+                "target_language": target_language,
                 "transcription": transcription,
+                "translation": translation,
                 "transcription_file": transcription_file.name
             },
             status_code=200
-        )
+        )    
     except Exception as e:
-        return JSONResponse(
-            content={"error": str(e)},
-            status_code=500
-        )
+            error_message = str(e)
+
+            if "Failed to load audio" in error_message or "Invalid data" in error_message:
+                return JSONResponse(
+                    content={"error": "קובץ האודיו לא תקין או בפורמט לא נתמך"},
+                    status_code=400
+                )
+
+            return JSONResponse(
+                content={"error": error_message},
+                status_code=500
+            )
+   
 
 
 @app.get("/")

@@ -14,3 +14,4 @@ node_modules
 .next
 backend/uploads/
 desktop.ini
+.expo/
