@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session as DBSession
 from db import get_db
 from models import Session, TranscriptChunk
 from fastapi import Depends
+from sqlalchemy import select
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -25,6 +26,10 @@ app = FastAPI()
 
 class SummarizeRequest(BaseModel):
     text: str
+    
+class SearchRequest(BaseModel):
+    session_id: str
+    query: str    
 
 # טעינת מודל Whisper 
 print("טוען מודל Whisper...")
@@ -118,6 +123,9 @@ def get_embeddings(texts: list[str]) -> list[list[float]]:
         input=texts
     )
     return [item.embedding for item in response.data]
+    
+def get_query_embedding(text: str) -> list[float]:
+    return get_embeddings([text])[0]    
 
 @app.post("/upload")
 async def upload_audio(
@@ -286,6 +294,49 @@ async def summarize_audio(payload: SummarizeRequest):
             content={"error": error_message},
             status_code=500
         )
+    
+@app.post("/search")
+async def search_transcript(
+    payload: SearchRequest,
+    db: DBSession = Depends(get_db),
+):
+    try:
+        if not payload.query.strip():
+            return JSONResponse(
+                content={"error": "Query is required"},
+                status_code=400
+            )
+        query_embedding = get_query_embedding(payload.query)
+        results = (
+            db.query(TranscriptChunk)
+            .filter(TranscriptChunk.session_id == payload.session_id)
+            .order_by(TranscriptChunk.embedding.cosine_distance(query_embedding))
+            .limit(5)
+            .all()
+        )
+        return JSONResponse(
+            content={
+                "results": [
+                    {
+                        "id": row.id,
+                        "chunk_index": row.chunk_index,
+                        "start_time": row.start_time,
+                        "end_time": row.end_time,
+                        "original_text": row.original_text,
+                        "display_text": row.display_text,
+                    }
+                    for row in results
+                ]
+            },
+            status_code=200
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )    
    
 
 
