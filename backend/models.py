@@ -5,7 +5,6 @@ from pgvector.sqlalchemy import Vector
 from db import Base
 
 EMBEDDING_DIM = 1536
-print("MODELS LOADED")
 
 
 class Session(Base):

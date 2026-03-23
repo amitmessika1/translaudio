@@ -9,15 +9,17 @@ import os
 from openai import OpenAI
 from pydantic import BaseModel
 from db import engine, Base
-import models
+import uuid
+from sqlalchemy.orm import Session as DBSession
+from db import get_db
+from models import Session, TranscriptChunk
+from fastapi import Depends
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-print("DB URL:", engine.url)
-print("BASE TABLES:", Base.metadata.tables.keys())
 Base.metadata.create_all(bind=engine)
-print("AFTER CREATE_ALL:", Base.metadata.tables.keys())
+
 
 app = FastAPI()
 
@@ -66,10 +68,62 @@ def summarize_text(text: str) -> str:
     )
     return response.output_text.strip()
 
+def build_chunks(segments, max_chars=800):
+    chunks = []
+    current_texts = []
+    current_start = None
+    current_end = None
+    chunk_index = 0
+
+    for seg in segments:
+        seg_text = (seg.get("text") or "").strip()
+        if not seg_text:
+            continue
+
+        seg_start = float(seg.get("start", 0))
+        seg_end = float(seg.get("end", seg_start))
+
+        candidate = " ".join(current_texts + [seg_text]).strip()
+
+        if current_texts and len(candidate) > max_chars:
+            chunks.append({
+                "chunk_index": chunk_index,
+                "start_time": current_start,
+                "end_time": current_end,
+                "original_text": " ".join(current_texts).strip(),
+            })
+            chunk_index += 1
+            current_texts = [seg_text]
+            current_start = seg_start
+            current_end = seg_end
+        else:
+            if current_start is None:
+                current_start = seg_start
+            current_end = seg_end
+            current_texts.append(seg_text)
+
+    if current_texts:
+        chunks.append({
+            "chunk_index": chunk_index,
+            "start_time": current_start,
+            "end_time": current_end,
+            "original_text": " ".join(current_texts).strip(),
+        })
+
+    return chunks
+
+def get_embeddings(texts: list[str]) -> list[list[float]]:
+    response = openai_client.embeddings.create(
+        model="text-embedding-3-small",
+        input=texts
+    )
+    return [item.embedding for item in response.data]
+
 @app.post("/upload")
-async def upload_file(
+async def upload_audio(
     file: UploadFile = File(...),
-    target_language: str = Form("en")
+    target_language: str = Form("he"),
+    db: DBSession = Depends(get_db),
 ):
     """
     מקבל קובץ אודיו ושומר אותו בתיקיית uploads
@@ -122,6 +176,42 @@ async def upload_file(
             translation = transcription
         print(f"תמלול הושלם: {len(transcription)} תווים")
         
+             
+        session_id = uuid.uuid4().hex
+        db_session = Session(
+            id=session_id,
+            filename=file.filename,
+            source_language=source_language,
+            target_language=target_language,
+            transcription=transcription,
+            translation=translation,
+        )
+        db.add(db_session)
+        db.commit()
+        
+        
+        segments = result.get("segments", [])
+        chunks = build_chunks(segments)
+        display_texts = []
+        for chunk in chunks:
+            display_texts.append(chunk["original_text"])
+        embeddings = get_embeddings(display_texts)
+        chunk_rows = []
+        for chunk, embedding, display_text in zip(chunks, embeddings, display_texts):
+            chunk_row = TranscriptChunk(
+                id=uuid.uuid4().hex,
+                session_id=session_id,
+                chunk_index=chunk["chunk_index"],
+                start_time=chunk["start_time"],
+                end_time=chunk["end_time"],
+                original_text=chunk["original_text"],
+                display_text=display_text,
+                embedding=embedding,
+            )
+            chunk_rows.append(chunk_row)
+        db.add_all(chunk_rows)
+        db.commit()
+        
         # שמירת התמלול לקובץ טקסט
         transcription_file = file_path.with_suffix('.txt')
         transcription_file.write_text(transcription, encoding='utf-8')
@@ -136,7 +226,9 @@ async def upload_file(
                 "target_language": target_language,
                 "transcription": transcription,
                 "translation": translation,
-                "transcription_file": transcription_file.name
+                "transcription_file": transcription_file.name,
+                "session_id": session_id,
+                "segments": segments,
             },
             status_code=200
         )    
