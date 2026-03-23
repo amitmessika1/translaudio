@@ -75,12 +75,13 @@ export function useTranscription() {
     }
   }
 
-  async function copyText() {
-    if (!transcription) return;
-    await navigator.clipboard.writeText(transcription);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
-  }
+async function copyText() {
+  const textToCopy = translation || transcription;
+  if (!textToCopy) return;
+  await navigator.clipboard.writeText(textToCopy);
+  setCopied(true);
+  setTimeout(() => setCopied(false), 1200);
+}
   
   async function generateSummary() {
   const baseText = translation || transcription;

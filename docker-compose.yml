@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: translaudio_db
+    environment:
+      POSTGRES_USER: translaudio
+      POSTGRES_PASSWORD: translaudio
+      POSTGRES_DB: translaudio
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:

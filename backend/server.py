@@ -8,9 +8,17 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 from pydantic import BaseModel
+from db import engine, Base
+import models
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+print("DB URL:", engine.url)
+print("BASE TABLES:", Base.metadata.tables.keys())
+Base.metadata.create_all(bind=engine)
+print("AFTER CREATE_ALL:", Base.metadata.tables.keys())
+
 app = FastAPI()
 
 class SummarizeRequest(BaseModel):
@@ -194,6 +202,3 @@ async def root():
     return {"message": "שרת העלאת קבצים פעיל"}
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)

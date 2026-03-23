@@ -15,3 +15,5 @@ node_modules
 backend/uploads/
 desktop.ini
 .expo/
+.DS_Store
+Thumbs.db

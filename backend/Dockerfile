@@ -1,0 +1,13 @@
+FROM postgres:16
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    postgresql-server-dev-16 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN cd /tmp \
+    && git clone --branch v0.8.2 https://github.com/pgvector/pgvector.git \
+    && cd pgvector \
+    && make \
+    && make install
