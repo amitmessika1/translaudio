@@ -7,14 +7,18 @@ import asyncio
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
+from pydantic import BaseModel
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app = FastAPI()
 
-# טעינת מודל Whisper (פעם אחת בהתחלה)
+class SummarizeRequest(BaseModel):
+    text: str
+
+# טעינת מודל Whisper 
 print("טוען מודל Whisper...")
-whisper_model = whisper.load_model("base")  # אפשרויות: tiny, base, small, medium, large
+whisper_model = whisper.load_model("base")  
 print("מודל Whisper נטען בהצלחה!")
 
 # תיקיה לשמירת הקבצים שהועלו
@@ -43,6 +47,16 @@ def translate_text(text: str, source_language: str, target_language: str) -> str
     )
     return response.output_text.strip()
 
+def summarize_text(text: str) -> str:
+    response = openai_client.responses.create(
+        model="gpt-5.4",
+        instructions=(
+            "Summarize the following text in a clear and concise way. "
+            "Keep it short and easy to read."
+        ),
+        input=text,
+    )
+    return response.output_text.strip()
 
 @app.post("/upload")
 async def upload_file(
@@ -90,6 +104,7 @@ async def upload_file(
 
         source_language = result.get("language", "")
         transcription = result["text"]
+        
         if source_language != target_language:
             translation = await loop.run_in_executor(
                 None,
@@ -137,6 +152,40 @@ async def upload_file(
                 content={"error": error_message},
                 status_code=500
             )
+    
+@app.post("/summarize")
+async def summarize_audio(payload: SummarizeRequest):
+    try:
+        if not payload.text.strip():
+            return JSONResponse(
+                content={"error": "No text provided"},
+                status_code=400
+            )
+
+        loop = asyncio.get_running_loop()
+        summary = await loop.run_in_executor(
+            None,
+            lambda: summarize_text(payload.text)
+        )
+
+        return JSONResponse(
+            content={"summary": summary},
+            status_code=200
+        )
+
+    except Exception as e:
+        error_message = str(e)
+
+        if "insufficient_quota" in error_message:
+            return JSONResponse(
+                content={"error": "שירות הסיכום לא זמין כרגע: נגמרה מכסת ה-API."},
+                status_code=502
+            )
+
+        return JSONResponse(
+            content={"error": error_message},
+            status_code=500
+        )
    
 
 

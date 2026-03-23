@@ -1,10 +1,12 @@
 export async function POST(req: Request) {
-  const formData = await req.formData();
-  console.log("req is:",req) //TODO
+  const body = await req.json();
 
-  const res = await fetch("http://127.0.0.1:8000/upload", {
+  const res = await fetch("http://127.0.0.1:8000/summarize", {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
 
   const data = await res.json();

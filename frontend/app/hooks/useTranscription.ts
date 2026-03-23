@@ -12,6 +12,8 @@ export function useTranscription() {
   const [targetLanguage, setTargetLanguage] = useState("he");
   const [translation, setTranslation] = useState("");
   const [copied, setCopied] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [summarizing, setSummarizing] = useState(false);
 
   const busy = status === "uploading";
 
@@ -27,6 +29,7 @@ export function useTranscription() {
     setTranscription("");
     setTranslation("");
     setCopied(false);
+    setSummary("");
   }
 
   function isAudioFile(f: File) {
@@ -59,7 +62,7 @@ export function useTranscription() {
     form.append("target_language", targetLanguage);
 
     try {
-      const res = await fetch("/api", { method: "POST", body: form });
+      const res = await fetch("/api/upload", { method: "POST", body: form });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Upload failed");
 
@@ -78,6 +81,33 @@ export function useTranscription() {
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   }
+  
+  async function generateSummary() {
+  const baseText = translation || transcription;
+  if (!baseText) return;
+
+  setSummarizing(true);
+  setError("");
+
+  try {
+    const res = await fetch("/api/summarize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: baseText }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Summary failed");
+
+    setSummary(data.summary || "");
+  } catch (err: any) {
+    setError(err?.message || "Something went wrong");
+  } finally {
+    setSummarizing(false);
+  }
+}
 
   return {
     file,
@@ -95,5 +125,8 @@ export function useTranscription() {
     upload,
     copyText,
     resetUi,
+    summary,
+    summarizing,
+    generateSummary,
   };
 }

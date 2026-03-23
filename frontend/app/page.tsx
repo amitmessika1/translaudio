@@ -190,6 +190,7 @@ import TranscriptPanel from "./components/TranscriptPanel";
 import { useTranscription } from "./hooks/useTranscription";
 import { LANGUAGES } from "./constants/languages";
 import LanguageSelector from "./components/LanguageSelector";
+import SummaryPanel from "./components/SummaryPanel";
 
 export default function Home() {
   const {
@@ -198,6 +199,9 @@ export default function Home() {
     error,
     transcription,
     translation,
+    summary,
+    summarizing,
+    generateSummary,
     targetLanguage,
     setTargetLanguage,
     copied,
@@ -236,6 +240,9 @@ export default function Home() {
           <ActionsBar file={file} status={status} error={error} onUpload={upload} />
 
           <TranscriptPanel transcription={translation || transcription} copied={copied} onCopy={copyText} />
+          <SummaryPanel summary={summary} summarizing={summarizing} onSummarize={generateSummary}
+              disabled={!(translation || transcription)}
+            />
         </section>
       </div>
     </main>
