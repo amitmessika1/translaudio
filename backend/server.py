@@ -30,6 +30,11 @@ class SummarizeRequest(BaseModel):
 class SearchRequest(BaseModel):
     session_id: str
     query: str    
+    
+class AskRequest(BaseModel):
+    session_id: str
+    question: str    
+    
 
 # טעינת מודל Whisper 
 print("טוען מודל Whisper...")
@@ -126,6 +131,34 @@ def get_embeddings(texts: list[str]) -> list[list[float]]:
     
 def get_query_embedding(text: str) -> list[float]:
     return get_embeddings([text])[0]    
+
+def generate_answer(question: str, chunks: list[TranscriptChunk]) -> str:
+    context = "\n\n".join(
+        [
+            f"[Chunk {chunk.chunk_index} | {chunk.start_time:.0f}-{chunk.end_time:.0f}s]\n{chunk.display_text}"
+            for chunk in chunks
+        ]
+    )
+    print("CALLING LLM...")
+    response = openai_client.responses.create(
+        model="gpt-4.1-mini",
+        input=[
+            {
+                "role": "system",
+                "content": (
+                    "You answer questions only based on the provided transcript chunks. "
+                    "If the answer is not supported by the transcript, say that you don't have enough information. "
+                    "Be concise and factual."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"Question: {question}\n\nTranscript context:\n{context}",
+            },
+        ],
+    )
+    print("ASK ANSWER READY")
+    return response.output_text
 
 @app.post("/upload")
 async def upload_audio(
@@ -336,7 +369,60 @@ async def search_transcript(
         return JSONResponse(
             content={"error": str(e)},
             status_code=500
-        )    
+        )  
+        
+        
+@app.post("/ask")
+async def ask_transcript(
+    payload: AskRequest,
+    db: DBSession = Depends(get_db),
+):
+    try:
+        if not payload.question.strip():
+            return JSONResponse(
+                content={"error": "Question is required"},
+                status_code=400
+            )
+        print("ASK STARTED", payload.session_id, payload.question)
+        query_embedding = get_query_embedding(payload.question)
+        print("EMBEDDING READY")
+        results = (
+            db.query(TranscriptChunk)
+            .filter(TranscriptChunk.session_id == payload.session_id)
+            .order_by(TranscriptChunk.embedding.cosine_distance(query_embedding))
+            .limit(5)
+            .all()
+        )
+        if not results:
+            return JSONResponse(
+                content={"error": "No transcript chunks found for this session"},
+                status_code=404
+            )
+        print("ASK RETRIEVAL DONE", len(results))
+        answer = generate_answer(payload.question, results)
+        return JSONResponse(
+            content={
+                "answer": answer,
+                "sources": [
+                    {
+                        "id": row.id,
+                        "chunk_index": row.chunk_index,
+                        "start_time": row.start_time,
+                        "end_time": row.end_time,
+                        "display_text": row.display_text,
+                    }
+                    for row in results
+                ],
+            },
+            status_code=200,
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )          
    
 
 
