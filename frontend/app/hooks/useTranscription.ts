@@ -12,6 +12,19 @@ type AskSource = {
   display_text: string;
 };
 
+type RecommendedResource = {
+  title: string;
+  type: "article" | "video" | "podcast" | "reference";
+  why_relevant: string;
+  suggested_query: string;
+};
+
+type RecommendResourcesResponse = {
+  topic: string;
+  intent: string;
+  related_resources: RecommendedResource[];
+};
+
 export function useTranscription() {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -27,6 +40,10 @@ export function useTranscription() {
   const [asking, setAsking] = useState(false);
   const [answer, setAnswer] = useState("");
   const [askSources, setAskSources] = useState<AskSource[]>([]);
+  const [recommending, setRecommending] = useState(false);
+  const [resourceTopic, setResourceTopic] = useState("");
+  const [resourceIntent, setResourceIntent] = useState("");
+  const [relatedResources, setRelatedResources] = useState<RecommendedResource[]>([]);
 
   const busy = status === "uploading";
 
@@ -43,6 +60,9 @@ export function useTranscription() {
     setTranslation("");
     setCopied(false);
     setSummary("");
+    setResourceTopic("");
+    setResourceIntent("");
+    setRelatedResources([]);
   }
 
   function isAudioFile(f: File) {
@@ -73,6 +93,9 @@ export function useTranscription() {
     setSummary("");
     setAnswer("");
     setAskSources([]);
+    setResourceTopic("");
+    setResourceIntent("");
+    setRelatedResources([]);
     const form = new FormData();
     form.append("file", file);
     form.append("target_language", targetLanguage);
@@ -153,6 +176,35 @@ async function askQuestion() {
   }
 }
 
+
+async function generateRelatedResources() {
+  if (!question.trim() || !answer.trim()) return;
+  setRecommending(true);
+  setError("");
+  try {
+    const res = await fetch("/api/recommend-resources", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question,
+        answer,
+        sources: askSources,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Recommendations failed");
+    setResourceTopic(data.topic || "");
+    setResourceIntent(data.intent || "");
+    setRelatedResources(data.related_resources || []);
+  } catch (err: any) {
+    setError(err?.message || "Something went wrong");
+  } finally {
+    setRecommending(false);
+  }
+}
+
   return {
     file,
     status,
@@ -179,5 +231,10 @@ async function askQuestion() {
     answer,
     askSources,
     askQuestion,
+    recommending,
+    resourceTopic,
+    resourceIntent,
+    relatedResources,
+    generateRelatedResources,
   };
 }

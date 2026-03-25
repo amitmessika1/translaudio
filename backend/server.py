@@ -15,6 +15,58 @@ from db import get_db
 from models import Session, TranscriptChunk
 from fastapi import Depends
 from sqlalchemy import select
+import json
+
+def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict:
+    source_context = "\n\n".join(
+        [
+            f"[Chunk {src.get('chunk_index')} | {src.get('start_time', 0):.0f}-{src.get('end_time', 0):.0f}s]\n"
+            f"{src.get('display_text', '')}"
+            for src in sources
+        ]
+    )
+
+    response = openai_client.responses.create(
+        model="gpt-4.1-mini",
+        input=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a learning resource recommendation agent. "
+                    "Given a user's question, the grounded answer, and transcript evidence, "
+                    "infer the main topic and the user's learning intent, then recommend 3 to 5 "
+                    "highly relevant follow-up resources. "
+                    "Do not invent direct URLs. Instead return suggested search queries. "
+                    "Prefer a diverse mix of resource types such as article, video, podcast, and reference. "
+                    "Return valid JSON only."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Question:\n{question}\n\n"
+                    f"Answer:\n{answer}\n\n"
+                    f"Transcript sources:\n{source_context}\n\n"
+                    "Return JSON in this exact shape:\n"
+                    "{\n"
+                    '  "topic": "string",\n'
+                    '  "intent": "string",\n'
+                    '  "related_resources": [\n'
+                    "    {\n"
+                    '      "title": "string",\n'
+                    '      "type": "article | video | podcast | reference",\n'
+                    '      "why_relevant": "string",\n'
+                    '      "suggested_query": "string"\n'
+                    "    }\n"
+                    "  ]\n"
+                    "}\n"
+                ),
+            },
+        ],
+    )
+
+    raw = response.output_text.strip()
+    return json.loads(raw)
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -34,6 +86,11 @@ class SearchRequest(BaseModel):
 class AskRequest(BaseModel):
     session_id: str
     question: str    
+    
+class RecommendResourcesRequest(BaseModel):
+    question: str
+    answer: str
+    sources: list[dict]    
     
 
 # טעינת מודל Whisper 
@@ -159,6 +216,56 @@ def generate_answer(question: str, chunks: list[TranscriptChunk]) -> str:
     )
     print("ASK ANSWER READY")
     return response.output_text
+    
+    
+def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict:
+    source_context = "\n\n".join(
+        [
+            f"[Chunk {src.get('chunk_index')} | {src.get('start_time', 0):.0f}-{src.get('end_time', 0):.0f}s]\n"
+            f"{src.get('display_text', '')}"
+            for src in sources
+        ]
+    )
+    response = openai_client.responses.create(
+        model="gpt-4.1-mini",
+        input=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a learning resource recommendation agent. "
+                    "Given a user's question, the grounded answer, and transcript evidence, "
+                    "infer the main topic and the user's learning intent, then recommend 3 to 5 "
+                    "highly relevant follow-up resources. "
+                    "Do not invent direct URLs. Instead return suggested search queries. "
+                    "Prefer a diverse mix of resource types such as article, video, podcast, and reference. "
+                    "Return valid JSON only."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Question:\n{question}\n\n"
+                    f"Answer:\n{answer}\n\n"
+                    f"Transcript sources:\n{source_context}\n\n"
+                    "Return JSON in this exact shape:\n"
+                    "{\n"
+                    '  "topic": "string",\n'
+                    '  "intent": "string",\n'
+                    '  "related_resources": [\n'
+                    "    {\n"
+                    '      "title": "string",\n'
+                    '      "type": "article | video | podcast | reference",\n'
+                    '      "why_relevant": "string",\n'
+                    '      "suggested_query": "string"\n'
+                    "    }\n"
+                    "  ]\n"
+                    "}\n"
+                ),
+            },
+        ],
+    )
+    raw = response.output_text.strip()
+    return json.loads(raw)    
 
 @app.post("/upload")
 async def upload_audio(
@@ -424,7 +531,37 @@ async def ask_transcript(
             status_code=500
         )          
    
-
+@app.post("/recommend-resources")
+async def recommend_resources_endpoint(payload: RecommendResourcesRequest):
+    try:
+        if not payload.question.strip():
+            return JSONResponse(
+                content={"error": "Question is required"},
+                status_code=400
+            )
+        if not payload.answer.strip():
+            return JSONResponse(
+                content={"error": "Answer is required"},
+                status_code=400
+            )
+        loop = asyncio.get_running_loop()
+        recommendations = await loop.run_in_executor(
+            None,
+            lambda: recommend_resources(
+                payload.question,
+                payload.answer,
+                payload.sources,
+            )
+        )
+        return JSONResponse(
+            content=recommendations,
+            status_code=200
+        )
+    except Exception as e:
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )
 
 @app.get("/")
 async def root():

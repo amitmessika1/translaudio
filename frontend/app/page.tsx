@@ -9,6 +9,7 @@ import { LANGUAGES } from "./constants/languages";
 import LanguageSelector from "./components/LanguageSelector";
 import SummaryPanel from "./components/SummaryPanel";
 import AskPanel from "./components/AskPanel";
+import RelatedResourcesPanel from "./components/RelatedResourcesPanel";
 
 export default function Home() {
   const {
@@ -35,6 +36,11 @@ export default function Home() {
     askSources,
     askQuestion,
     sessionId,
+    recommending,
+    resourceTopic,
+    resourceIntent,
+    relatedResources,
+    generateRelatedResources,
   } = useTranscription();
 
   return (
@@ -72,6 +78,11 @@ export default function Home() {
                   asking={asking} answer={answer} sources={askSources}
                     disabled={!sessionId || !(translation || transcription)}
               />
+              
+            <RelatedResourcesPanel topic={resourceTopic} intent={resourceIntent}
+                resources={relatedResources} loading={recommending}
+                    onGenerate={generateRelatedResources} disabled={!answer}
+            />
         </section>
       </div>
     </main>
