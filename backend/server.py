@@ -16,6 +16,13 @@ from models import Session, TranscriptChunk
 from fastapi import Depends
 from sqlalchemy import select
 import json
+import httpx
+from dotenv import load_dotenv
+
+load_dotenv()
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+print("API KEY:", YOUTUBE_API_KEY)
 
 def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict:
     source_context = "\n\n".join(
@@ -25,7 +32,6 @@ def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict
             for src in sources
         ]
     )
-
     response = openai_client.responses.create(
         model="gpt-4.1-mini",
         input=[
@@ -256,7 +262,9 @@ def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict
                     '      "title": "string",\n'
                     '      "type": "article | video | podcast | reference",\n'
                     '      "why_relevant": "string",\n'
-                    '      "suggested_query": "string"\n'
+                    '      "suggested_query": "string",\n'
+                    '      "url": null,\n'
+                    '      "source": null\n'
                     "    }\n"
                     "  ]\n"
                     "}\n"
@@ -265,7 +273,107 @@ def recommend_resources(question: str, answer: str, sources: list[dict]) -> dict
         ],
     )
     raw = response.output_text.strip()
-    return json.loads(raw)    
+    parsed = json.loads(raw)
+    for resource in parsed.get("related_resources", []):
+        resource.setdefault("url", None)
+        resource.setdefault("source", None)
+    return parsed   
+
+async def search_youtube_video(query: str) -> dict | None:
+    if not YOUTUBE_API_KEY or not query.strip():
+        return None
+    print("QUERY:", query)
+    print("API KEY EXISTS:", bool(YOUTUBE_API_KEY))
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        "part": "snippet",
+        "q": query,
+        "type": "video",
+        "maxResults": 1,
+        "key": YOUTUBE_API_KEY,
+    }
+    async with httpx.AsyncClient(timeout=15) as client:
+        resp = await client.get(url, params=params)
+        resp.raise_for_status()
+        data = resp.json()
+    items = data.get("items", [])
+    if not items:
+        return None
+    first = items[0]
+    video_id = first.get("id", {}).get("videoId")
+    title = first.get("snippet", {}).get("title")
+    print("STATUS:", resp.status_code)
+    print("BODY:", resp.text[:300])
+    if not video_id:
+        return None
+    return {
+        "title": title or query,
+        "url": f"https://www.youtube.com/watch?v={video_id}",
+        "source": "YouTube",
+    }
+
+async def search_wikipedia_page(query: str) -> dict | None:
+    if not query.strip():
+        return None
+    url = "https://en.wikipedia.org/w/api.php"
+    params = {
+        "action": "query",
+        "list": "search",
+        "srsearch": query,
+        "format": "json",
+        "utf8": 1,
+        "srlimit": 1,
+    }
+    headers = {
+        "User-Agent": "Translaudio/1.0 (local development; contact: your-email@example.com)",
+        "Api-User-Agent": "Translaudio/1.0 (local development; contact: your-email@example.com)",
+        "Accept": "application/json",
+    }
+    print("Wikipedia query:", query)
+    async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
+        resp = await client.get(url, params=params, headers=headers)
+        print("Wikipedia status:", resp.status_code)
+        print("Wikipedia body:", resp.text[:300])
+        resp.raise_for_status()
+        data = resp.json()
+    results = data.get("query", {}).get("search", [])
+    print("Wikipedia results found:", len(results))
+    if not results:
+        return None
+    first = results[0]
+    title = first.get("title")
+    if not title:
+        return None
+    return {
+        "title": title,
+        "url": f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}",
+        "source": "Wikipedia",
+    }
+
+
+async def enrich_related_resources(resources: list[dict]) -> list[dict]:
+    enriched = []
+    for resource in resources:
+        resource_type = resource.get("type")
+        query = (resource.get("suggested_query") or "").strip()
+        link_data = None
+        try:
+            if resource_type == "video" and query:
+                link_data = await search_youtube_video(query)
+            elif resource_type == "reference" and query:
+                link_data = await search_wikipedia_page(query)
+        except Exception as e:
+            print("ERROR:", repr(e))
+            link_data = None
+        resource.setdefault("url", None)
+        resource.setdefault("source", None)
+        if link_data:
+            resource["title"] = link_data.get("title", resource.get("title"))
+            resource["url"] = link_data.get("url")
+            resource["source"] = link_data.get("source")
+        enriched.append(resource)
+    return enriched
+
 
 @app.post("/upload")
 async def upload_audio(
@@ -552,6 +660,9 @@ async def recommend_resources_endpoint(payload: RecommendResourcesRequest):
                 payload.answer,
                 payload.sources,
             )
+        )
+        recommendations["related_resources"] = await enrich_related_resources(
+        recommendations.get("related_resources", [])
         )
         return JSONResponse(
             content=recommendations,

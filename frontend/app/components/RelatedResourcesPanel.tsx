@@ -5,6 +5,8 @@ type RecommendedResource = {
   type: "article" | "video" | "podcast" | "reference";
   why_relevant: string;
   suggested_query: string;
+  url?: string | null;
+  source?: string | null;
 };
 
 type RelatedResourcesPanelProps = {
@@ -79,7 +81,22 @@ export default function RelatedResourcesPanel({
               <p className="mt-2 text-sm text-zinc-700 leading-6">
                 {resource.why_relevant}
               </p>
-
+              
+          {resource.url ? (
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex mt-3 text-sm font-medium text-indigo-600 hover:underline"
+              >
+                Open resource
+              </a>
+            ) : (
+              <div className="mt-3 text-sm text-zinc-500">
+                Search manually: {resource.suggested_query}
+              </div>
+            )}
+              
               <div className="mt-3 rounded-xl bg-zinc-50 border border-zinc-200 p-3">
                 <div className="text-xs font-semibold text-zinc-500 mb-1">
                   Suggested search

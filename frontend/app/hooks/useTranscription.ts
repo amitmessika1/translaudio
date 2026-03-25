@@ -17,6 +17,8 @@ type RecommendedResource = {
   type: "article" | "video" | "podcast" | "reference";
   why_relevant: string;
   suggested_query: string;
+  url?: string | null;
+  source?: string | null;
 };
 
 type RecommendResourcesResponse = {
