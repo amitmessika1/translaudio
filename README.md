@@ -98,7 +98,7 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 3. Retrieve top relevant chunks  
 4. LLM generates grounded answer  
 
-### 3. Agent Flow (Key Feature 🔥)
+### 3. Agent Flow 
 
 **Takes:**
 - Question  
@@ -216,11 +216,4 @@ YOUTUBE_API_KEY=your_key
 - Docker  
 - Docker Compose  
 
----
 
-## 🔥 Key Highlights
-
-- Combines **RAG + Agent architecture**  
-- Enables **grounded answers + proactive learning**  
-- Uses **semantic search over audio transcripts**  
-- Automatically bridges **internal knowledge with external resources**  
