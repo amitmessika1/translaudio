@@ -153,19 +153,45 @@ Installation
 ```bash
 pip install -r requirements.txt
 uvicorn server:app --reload
+```
 
 ### Frontend
-bash cd frontend npm install npm run dev
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-###🐳 Run with Docker (Recommended) docker-compose up --build This will start: FastAPI backend Next.js frontend PostgreSQL database
+---
 
-## 🛑 Stop containers docker-compose down
+### 🐳 Run with Docker (Recommended)
+```bash
+docker-compose up --build
+```
+
+This will start:
+- FastAPI backend  
+- Next.js frontend  
+- PostgreSQL database  
+
+---
+
+### 🛑 Stop containers
+```bash
+docker-compose down
+```
+
+---
 
 ## 🌍 Environment Variables
-env
+
+```env
 OPENAI_API_KEY=your_key
 DATABASE_URL=postgresql://user:password@localhost:5432/translaudio
 YOUTUBE_API_KEY=your_key
+```
+
+---
 
 ## 🧩 Tech Stack
 
@@ -176,7 +202,7 @@ YOUTUBE_API_KEY=your_key
 - Tailwind CSS  
 
 ### Backend
-- Python
+- Python  
 - FastAPI  
 - OpenAI API  
 - Whisper  
@@ -186,6 +212,10 @@ YOUTUBE_API_KEY=your_key
 - PostgreSQL  
 - pgvector  
 
+### DevOps / Infrastructure
+- Docker  
+- Docker Compose  
+
 ---
 
 ## 🔥 Key Highlights
@@ -193,4 +223,4 @@ YOUTUBE_API_KEY=your_key
 - Combines **RAG + Agent architecture**  
 - Enables **grounded answers + proactive learning**  
 - Uses **semantic search over audio transcripts**  
-- Automatically bridges **internal knowledge with external resource
+- Automatically bridges **internal knowledge with external resources**  
