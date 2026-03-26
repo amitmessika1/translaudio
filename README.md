@@ -119,8 +119,6 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 
 👉 This transforms the system from passive Q&A into an **active learning assistant**
 
----
-
 ## 🗄️ Database
 
 ### Sessions
