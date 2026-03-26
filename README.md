@@ -64,7 +64,7 @@ Handles:
 
 ---
 
-## 🏗️ Project Structure
+### Project Structure
 
 ```bash
 Translaudio
@@ -81,6 +81,9 @@ Translaudio
 └── docker-compose.yml
 
 This structure separates the frontend (Next.js) and backend (FastAPI) while keeping a clean API proxy layer and modular AI pipeline.
+
+---
+
 ## 🧠 How It Works
 
 ### 1. Upload Flow
@@ -142,66 +145,7 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 
 ## ⚙️ Installation
 
-Installation
-├── Backend (manual)
-├── Frontend (manual)
-└── Docker (recommended 🚀)
-
 ### Backend
 ```bash
 pip install -r requirements.txt
 uvicorn server:app --reload
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-
-###🐳  Run with Docker (Recommended)
-docker-compose up --build
-
-This will start:
-
-FastAPI backend
-Next.js frontend
-PostgreSQL database
-
-## 🛑 Stop containers
-docker-compose down
-
-## 🌍 Environment Variables
-
-```env
-OPENAI_API_KEY=your_key
-DATABASE_URL=postgresql://user:password@localhost:5432/translaudio
-YOUTUBE_API_KEY=your_key
-
-## 🧩 Tech Stack
-
-### Frontend
-- Next.js  
-- React  
-- TypeScript  
-- Tailwind CSS  
-
-### Backend
-- Python
-- FastAPI  
-- OpenAI API  
-- Whisper  
-- SQLAlchemy  
-
-### Database
-- PostgreSQL  
-- pgvector  
-
----
-
-## 🔥 Key Highlights
-
-- Combines **RAG + Agent architecture**  
-- Enables **grounded answers + proactive learning**  
-- Uses **semantic search over audio transcripts**  
-- Automatically bridges **internal knowledge with external resources**  
-
