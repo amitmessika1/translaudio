@@ -81,83 +81,127 @@ Translaudio
 └── docker-compose.yml
 
 This structure separates the frontend (Next.js) and backend (FastAPI) while keeping a clean API proxy layer and modular AI pipeline.
+## 🧠 How It Works
 
-🧠 How It Works
-1. Upload Flow
-Audio → Whisper transcription
-Optional translation
-Split into chunks
-Generate embeddings
-Store in DB
-2. RAG Q&A Flow
-User asks a question
-Query → embedding
-Retrieve top relevant chunks
-LLM generates grounded answer
-3. Agent Flow 
+### 1. Upload Flow
+- Audio → Whisper transcription  
+- Optional translation  
+- Split into chunks  
+- Generate embeddings  
+- Store in DB  
 
-Takes:
+### 2. RAG Q&A Flow
+1. User asks a question  
+2. Query → embedding  
+3. Retrieve top relevant chunks  
+4. LLM generates grounded answer  
 
-Question
-Answer
-Retrieved transcript chunks
+### 3. Agent Flow (Key Feature 🔥)
 
-Infers:
+**Takes:**
+- Question  
+- Answer  
+- Retrieved transcript chunks  
 
-Learning topic
-User intent
+**Infers:**
+- Learning topic  
+- User intent  
 
-Generates:
+**Generates:**
+- Structured recommendations (3–5 resources)  
 
-Structured recommendations (3–5 resources)
+**Enriches:**
+- Videos via YouTube API  
+- References via Wikipedia API  
 
-Enriches:
+👉 This transforms the system from passive Q&A into an **active learning assistant**
 
-Videos via YouTube API
-References via Wikipedia API
+---
 
-👉 This transforms the system from passive Q&A into an active learning assistant
+## 🗄️ Database
 
-🗄️ Database
-Sessions
-Stores transcription, translation, summary
-Transcript Chunks
-Timestamped segments
-Vector embeddings for similarity search
-🧪 API Endpoints
-Endpoint	Description
-POST /upload	Upload and process audio
-POST /summarize	Generate summary
-POST /ask	Ask questions (RAG)
-POST /recommend-resources	Agent recommendations
-⚙️ Installation
-Backend
+### Sessions
+- Stores transcription, translation, summary  
+
+### Transcript Chunks
+- Timestamped segments  
+- Vector embeddings for similarity search  
+
+---
+
+## 🧪 API Endpoints
+
+| Endpoint | Description |
+|----------|------------|
+| `POST /upload` | Upload and process audio |
+| `POST /summarize` | Generate summary |
+| `POST /ask` | Ask questions (RAG) |
+| `POST /recommend-resources` | Agent recommendations |
+
+---
+
+## ⚙️ Installation
+
+Installation
+├── Backend (manual)
+├── Frontend (manual)
+└── Docker (recommended 🚀)
+
+### Backend
+```bash
 pip install -r requirements.txt
 uvicorn server:app --reload
-Frontend
+
+### Frontend
+```bash
 cd frontend
 npm install
 npm run dev
-Environment Variables
+
+###🐳  Run with Docker (Recommended)
+docker-compose up --build
+
+This will start:
+
+FastAPI backend
+Next.js frontend
+PostgreSQL database
+
+## 🛑 Stop containers
+docker-compose down
+
+## 🌍 Environment Variables
+
+```env
 OPENAI_API_KEY=your_key
 DATABASE_URL=postgresql://user:password@localhost:5432/translaudio
 YOUTUBE_API_KEY=your_key
-🧩 Tech Stack
-Frontend
-Next.js
-React
-TypeScript
-Tailwind CSS
-Backend
-FastAPI
-OpenAI API
-Whisper
-SQLAlchemy
-Database
-PostgreSQL
-pgvector
-🔥 Key Highlights
-Combines RAG + Agent architecture
-Enables grounded answers + proactive learning
-Uses semantic search over audio transcripts
-Automatically bridges internal knowledge with external resources
+
+## 🧩 Tech Stack
+
+### Frontend
+- Next.js  
+- React  
+- TypeScript  
+- Tailwind CSS  
+
+### Backend
+- Python
+- FastAPI  
+- OpenAI API  
+- Whisper  
+- SQLAlchemy  
+
+### Database
+- PostgreSQL  
+- pgvector  
+
+---
+
+## 🔥 Key Highlights
+
+- Combines **RAG + Agent architecture**  
+- Enables **grounded answers + proactive learning**  
+- Uses **semantic search over audio transcripts**  
+- Automatically bridges **internal knowledge with external resources**  
+
