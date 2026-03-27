@@ -9,7 +9,7 @@ Translaudio is a full-stack AI application that transforms audio into actionable
 
 ---
 
-## 🚀 Features
+##  Features
 
 ### 🎙️ Audio Processing
 - Upload audio files (`mp3`, `wav`, `m4a`, etc.)
@@ -46,7 +46,7 @@ Translaudio is a full-stack AI application that transforms audio into actionable
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Frontend (Next.js)
 - UI for upload, transcript, summary, Q&A, and recommendations  
@@ -118,7 +118,7 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 
 👉 This transforms the system from passive Q&A into an **active learning assistant**
 
-## 🗄️ Database
+##  Database
 
 ### Sessions
 - Stores transcription, translation, summary  
@@ -129,7 +129,7 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 
 ---
 
-## 🧪 API Endpoints
+##  API Endpoints
 
 | Endpoint | Description |
 |----------|------------|
@@ -140,7 +140,7 @@ This structure separates the frontend (Next.js) and backend (FastAPI) while keep
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ```
 Installation
@@ -164,7 +164,7 @@ npm run dev
 
 ---
 
-### 🐳 Run with Docker (Recommended)
+###  Run with Docker (Recommended)
 ```bash
 docker-compose up --build
 ```
@@ -176,14 +176,14 @@ This will start:
 
 ---
 
-### 🛑 Stop containers
+###  Stop containers
 ```bash
 docker-compose down
 ```
 
 ---
 
-## 🌍 Environment Variables
+##  Environment Variables
 
 ```env
 OPENAI_API_KEY=your_key
@@ -193,7 +193,7 @@ YOUTUBE_API_KEY=your_key
 
 ---
 
-## 🧩 Tech Stack
+##  Tech Stack
 
 ### Frontend
 - Next.js  
