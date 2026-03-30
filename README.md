@@ -7,14 +7,6 @@
 
 An AI-powered audio intelligence platform that transforms raw audio into a searchable, interactive knowledge system using transcription, semantic retrieval (RAG) and an AI agent for learning recommendations.
 
-<div align="center">
-<p>
-  <a href="https://your-demo-link"><strong>Live Demo</strong></a>
-  ·
-  <a href="https://github.com/your-username/translaudio"><strong>Repository</strong></a>
-</p>
-</div>
-
 <p align="center">
   <img src="./screenshots/home.png" width="650"/>
 </p>
