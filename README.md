@@ -54,7 +54,7 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 
 ---
 
-### 📊 Additional Capabilities
+### Additional Capabilities
 - Transcript chunking with timestamps
 - Vector embeddings for semantic search
 - Summary generation
@@ -258,7 +258,7 @@ Output:
 
 ---
 
-## 🧠 How It Works
+##  How It Works
 
 ### 1. Transcription
 Audio is processed using Whisper, generating text + timestamps.
@@ -267,15 +267,18 @@ Audio is processed using Whisper, generating text + timestamps.
 Transcript is split into manageable semantic chunks.
 
 ### 3. Embedding
-Each chunk is converted into a vector representation.
+Each chunk is converted into a vector representation via `text-embedding-3-small` and stored in PostgreSQL with pgvector.
 
-### 4. Retrieval
+### 4. Translate
+If the source language differs from the target, GPT translates the full transcript
+
+### 5. Retrieval
 User queries are embedded and matched against stored vectors using cosine similarity.
 
-### 5. Generation (RAG)
-The LLM generates answers grounded in retrieved transcript chunks.
+### 6. Generation (RAG)
+The LLM generates answers grounded in retrieved transcript chunks. Top-5 retrieved chunks are passed to GPT-4.1-mini as grounded context.
 
-### 6. AI Agent
+### 7. Recommend (AI Agent)
 
 Analyzes:
 - User question  
@@ -283,14 +286,6 @@ Analyzes:
 - Supporting context  
 
 Then recommends relevant learning materials.
-
-1. **Upload** — Audio is saved and passed to Whisper for transcription and language detection
-2. **Chunk** — The transcript is split into overlapping segments (max ~800 chars) with timestamps
-3. **Embed** — Each chunk is embedded via `text-embedding-3-small` and stored in PostgreSQL with pgvector
-4. **Translate** — If the source language differs from the target, GPT translates the full transcript
-5. **Query** — User questions are embedded and matched against stored chunks via cosine distance
-6. **Answer** — The top-5 retrieved chunks are passed to GPT-4.1-mini as grounded context
-7. **Recommend** — The AI agent infers topic and intent, then recommends resources and resolves real YouTube and Wikipedia links
 
 ---
 
