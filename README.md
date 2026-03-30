@@ -301,8 +301,12 @@ Then recommends relevant learning materials.
   <img src="./screenshots/transcript.png" width="700"/>
 </p>
 
-### 💬 Q&A & 🤖 Recommendations
+### 💬 Q&A
 <p align="center">
-  <img src="./screenshots/qa.png" width="45%" style="margin-right:10px;"/>
-  <img src="./screenshots/recommendations.png" width="45%"/>
+  <img src="./screenshots/qa.png" width="700"/>
+</p>
+
+### 🤖 Recommendations
+<p align="center">
+  <img src="./screenshots/recommendations.png" width="700"/>
 </p>
