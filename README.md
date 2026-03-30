@@ -12,12 +12,12 @@ An AI-powered audio intelligence platform that transforms raw audio into a searc
 
 ##  Overview
 
-Translaudio allows users to:
+Translaudio is an audio intelligence system that lets users:
 
-- Upload any audio file
-- Automatically transcribe and translate it
+- Upload audio files in multiple formats
+- Automatically transcribe and translate spoken content
 - Ask questions about the content (RAG-based Q&A)
-- Receive AI-curated learning resources based on their queries
+- Get AI-curated follow-up learning resources based on question intent
 
 This project demonstrates a full **end-to-end AI pipeline**, combining:
 
@@ -32,6 +32,7 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 
 ### 🎙️ Audio Processing
 - Supports multiple formats: `.mp3` `.wav` `.m4a` `.flac` `.aac` `.ogg` `.wma` `.opus` `.aiff` `.ape`
+- Automatic transcription using Whisper
 - Automatic language detection
 - Optional translation to target language
 - Timestamped transcript generation
@@ -40,26 +41,23 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 
 ### 🧠 RAG-based Q&A
 - Ask natural language questions about your audio
-- Semantic search retrieves relevant transcript chunks
-- Answers are grounded in actual transcript data
+- Retrieve relevant transcript chunks using vector similarity
+- Generate grounded answers based only on transcript evidence
 
 ---
 
-### 🤖 AI Agent (Learning Recommendations)
+### 🤖 AI Agent Recommendations
 - Understands your **question + answer + context**
-- Infers:
-  - Topic
-  - Learning intent
+- Infers topic and learning intent
 - Recommends:
-  - 📺 Videos (YouTube)
+  - 📺 Videos 
   - 📚 Articles
   - 🎧 Podcasts
-  - 📖 References (Wikipedia)
+  - 📖 References 
 
 ---
 
 ### Additional Capabilities
-- Transcript chunking with timestamps
 - Vector embeddings for semantic search
 - Summary generation
 - Clean, modern UI with smooth animations
@@ -310,3 +308,45 @@ Then recommends relevant learning materials.
 <p align="center">
   <img src="./screenshots/recommendations.png" width="700"/>
 </p>
+
+##  Author
+
+Built by **Amit Messika**
+
+
+
+<div align="center">
+
+# 🎧 Translaudio
+
+### Your audio knows more than you think.
+
+An AI-powered audio intelligence platform that transforms raw audio into a searchable, interactive knowledge system using transcription, semantic retrieval (RAG), and AI-curated learning recommendations.
+
+<p>
+  <a href="https://github.com/your-username/translaudio/stargazers">
+    <img src="https://img.shields.io/github/stars/your-username/translaudio?style=for-the-badge" alt="stars" />
+  </a>
+  <a href="https://github.com/your-username/translaudio/network/members">
+    <img src="https://img.shields.io/github/forks/your-username/translaudio?style=for-the-badge" alt="forks" />
+  </a>
+  <a href="https://github.com/your-username/translaudio/issues">
+    <img src="https://img.shields.io/github/issues/your-username/translaudio?style=for-the-badge" alt="issues" />
+  </a>
+  <img src="https://img.shields.io/badge/Built%20With-Astro%20%7C%20FastAPI%20%7C%20PostgreSQL-blue?style=for-the-badge" alt="stack" />
+</p>
+
+<p>
+  <a href="https://your-demo-link"><strong>Live Demo</strong></a>
+  ·
+  <a href="https://github.com/your-username/translaudio"><strong>Repository</strong></a>
+</p>
+
+</div>
+
+
+
+
+
+
+
