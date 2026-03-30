@@ -87,6 +87,7 @@ Semantic Retrieval
 LLM Answer Generation (RAG)
    ↓
 AI Agent → Learning Recommendations
+```
 
 ## 🧱 Tech Stack
 
@@ -110,7 +111,6 @@ AI Agent → Learning Recommendations
 - OpenAI (LLM + embeddings)  
 - YouTube Data API  
 - Wikipedia API
-```
 
 | Layer | Technology |
 |---|---|
@@ -169,12 +169,6 @@ cd translaudio
 ### 2. Environment variables
 
 Create a `.env` file in the backend:
-
-```env
-OPENAI_API_KEY=your_openai_key
-DATABASE_URL=postgresql://translaudio:translaudio@localhost:5432/translaudio
-YOUTUBE_API_KEY=your_youtube_api_key
-```
 
 | Variable | Required | Description |
 |---|---|---|
@@ -289,6 +283,14 @@ Analyzes:
 - Supporting context  
 
 Then recommends relevant learning materials.
+
+1. **Upload** — Audio is saved and passed to Whisper for transcription and language detection
+2. **Chunk** — The transcript is split into overlapping segments (max ~800 chars) with timestamps
+3. **Embed** — Each chunk is embedded via `text-embedding-3-small` and stored in PostgreSQL with pgvector
+4. **Translate** — If the source language differs from the target, GPT translates the full transcript
+5. **Query** — User questions are embedded and matched against stored chunks via cosine distance
+6. **Answer** — The top-5 retrieved chunks are passed to GPT-4.1-mini as grounded context
+7. **Recommend** — The AI agent infers topic and intent, then recommends resources and resolves real YouTube and Wikipedia links
 
 ---
 
