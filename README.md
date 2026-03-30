@@ -3,9 +3,11 @@
 #  Translaudio
 
 ### Your audio knows more than you think.
+</div>
 
 An AI-powered audio intelligence platform that transforms raw audio into a searchable, interactive knowledge system using transcription, semantic retrieval (RAG) and an AI agent for learning recommendations.
 
+<div align="center">
 <p>
   <a href="https://your-demo-link"><strong>Live Demo</strong></a>
   ·
