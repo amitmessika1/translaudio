@@ -263,14 +263,14 @@ Output:
 ### 1. Transcription
 Audio is processed using Whisper, generating text + timestamps.
 
-### 2. Chunking
+### 2. Translate
+If the source language differs from the target, GPT translates the full transcript
+
+### 3. Chunking
 Transcript is split into manageable semantic chunks.
 
-### 3. Embedding
+### 4. Embedding
 Each chunk is converted into a vector representation via `text-embedding-3-small` and stored in PostgreSQL with pgvector.
-
-### 4. Translate
-If the source language differs from the target, GPT translates the full transcript
 
 ### 5. Retrieval
 User queries are embedded and matched against stored vectors using cosine similarity.
@@ -291,18 +291,18 @@ Then recommends relevant learning materials.
 
 ## 📸 Screenshots
 
-###  Homepage
+### 🏠 Homepage
 <p align="center">
   <img src="./screenshots/home.png" width="700"/>
 </p>
 
-###  Transcript View
+### 📝 Transcript View
 <p align="center">
   <img src="./screenshots/transcript.png" width="700"/>
 </p>
 
-###  Q&A &  Recommendations
+### 💬 Q&A & 🤖 Recommendations
 <p align="center">
-  <img src="./screenshots/qa.png" width="45%"/>
+  <img src="./screenshots/qa.png" width="45%" style="margin-right:10px;"/>
   <img src="./screenshots/recommendations.png" width="45%"/>
 </p>
