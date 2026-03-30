@@ -1,0 +1,336 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="How It Works" description="Understanding the Translaudio pipeline: upload, transcribe, embed, query, and learn.">
+  <!-- Hero -->
+  <section class="pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h1 class="heading-display text-5xl lg:text-7xl mb-6 reveal stagger-1">
+          The pipeline<br />
+          <span class="italic text-copper">in detail.</span>
+        </h1>
+        <p class="text-xl text-ink-muted leading-relaxed reveal stagger-2">
+          Three interconnected flows turn raw audio into an interactive knowledge system.
+          Each stage feeds the next.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Flow 1: Upload -->
+  <section class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12">
+        <!-- Label column -->
+        <div class="lg:col-span-4 reveal">
+          <div class="lg:sticky lg:top-24">
+            <span class="text-label text-copper">Flow 01</span>
+            <h2 class="heading-editorial text-4xl lg:text-5xl mt-4 mb-6">
+              Upload &<br />Process
+            </h2>
+            <p class="text-ink-muted leading-relaxed">
+              The entry point. Your audio file goes through a multi-step processing pipeline
+              that extracts, translates, chunks, and indexes the content for future retrieval.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pipeline steps -->
+        <div class="lg:col-span-8">
+          <div class="relative">
+            <!-- Vertical connector line -->
+            <div class="absolute left-6 top-0 bottom-0 w-px bg-paper-dark hidden lg:block"></div>
+
+            <div class="space-y-8">
+              <!-- Step 1 -->
+              <div class="relative flex gap-6 reveal stagger-1">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  1
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Audio Input</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    User uploads an audio file via the <code class="bg-paper px-2 py-0.5 rounded text-xs font-mono">POST /upload</code> endpoint.
+                    Supported formats include MP3, WAV, M4A, FLAC, and others.
+                  </p>
+                  <div class="flex items-center gap-4 text-xs text-slate font-mono">
+                    <span>Input: audio file</span>
+                    <span class="text-copper">&rarr;</span>
+                    <span>Output: raw audio buffer</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="relative flex gap-6 reveal stagger-2">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  2
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Whisper Transcription</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    OpenAI's Whisper model transcribes the audio. Language is automatically
+                    detected. If the source isn't English, translation is applied.
+                  </p>
+                  <div class="flex items-center gap-4 text-xs text-slate font-mono">
+                    <span>Input: audio buffer</span>
+                    <span class="text-copper">&rarr;</span>
+                    <span>Output: transcript + language</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="relative flex gap-6 reveal stagger-3">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  3
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Chunk & Embed</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    The transcript is split into timestamped segments. Each chunk is converted
+                    into a vector embedding for semantic similarity search.
+                  </p>
+                  <div class="flex items-center gap-4 text-xs text-slate font-mono">
+                    <span>Input: transcript</span>
+                    <span class="text-copper">&rarr;</span>
+                    <span>Output: chunks + embeddings</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="relative flex gap-6 reveal stagger-4">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  4
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Store in Database</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    Session metadata, transcript chunks, and vector embeddings are stored in
+                    PostgreSQL with pgvector. The audio is now fully indexed and queryable.
+                  </p>
+                  <div class="flex items-center gap-4 text-xs text-slate font-mono">
+                    <span>Input: chunks + vectors</span>
+                    <span class="text-copper">&rarr;</span>
+                    <span>Output: indexed session</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="waveform-line max-w-7xl mx-auto"></div>
+
+  <!-- Flow 2: RAG Q&A -->
+  <section class="py-24 lg:py-32 bg-paper-warm">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-4 reveal">
+          <div class="lg:sticky lg:top-24">
+            <span class="text-label text-copper">Flow 02</span>
+            <h2 class="heading-editorial text-4xl lg:text-5xl mt-4 mb-6">
+              RAG<br />Q&A
+            </h2>
+            <p class="text-ink-muted leading-relaxed">
+              The retrieval layer. A user's question is converted to an embedding,
+              matched against transcript chunks, and used to generate a grounded answer.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8">
+          <div class="relative">
+            <div class="absolute left-6 top-0 bottom-0 w-px bg-paper-dark hidden lg:block"></div>
+
+            <div class="space-y-8">
+              <div class="relative flex gap-6 reveal stagger-1">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-ink text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  1
+                </div>
+                <div class="bg-cream rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">User Question</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    The user submits a natural language question about the audio content
+                    via <code class="bg-paper-warm px-2 py-0.5 rounded text-xs font-mono">POST /ask</code>.
+                  </p>
+                  <div class="bg-ink text-cream rounded-xl px-4 py-3 text-sm font-mono">
+                    "What are the key differences between RNNs and transformers?"
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-2">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-ink text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  2
+                </div>
+                <div class="bg-cream rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Query Embedding</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed">
+                    The question is converted into a vector embedding using the same model
+                    that encoded the transcript chunks, ensuring compatible representations.
+                  </p>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-3">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-ink text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  3
+                </div>
+                <div class="bg-cream rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Retrieve Top Chunks</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    pgvector performs cosine similarity search to find the most relevant
+                    transcript segments. The top-K chunks become the context window.
+                  </p>
+                  <div class="space-y-2">
+                    <div class="pl-3 border-l-2 border-copper/40 text-sm text-ink-muted">
+                      <span class="font-mono text-xs text-copper">0.94</span> &mdash; [02:15] "Transformers process all positions simultaneously..."
+                    </div>
+                    <div class="pl-3 border-l-2 border-copper/40 text-sm text-ink-muted">
+                      <span class="font-mono text-xs text-copper">0.89</span> &mdash; [05:42] "Unlike RNNs, there is no sequential bottleneck..."
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-4">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-ink text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  4
+                </div>
+                <div class="bg-cream rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Generate Grounded Answer</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed">
+                    The LLM receives the retrieved chunks as context and generates an answer
+                    based strictly on the transcript content. No external knowledge is used.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="waveform-line max-w-7xl mx-auto"></div>
+
+  <!-- Flow 3: Agent -->
+  <section class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-4 reveal">
+          <div class="lg:sticky lg:top-24">
+            <span class="text-label text-copper">Flow 03</span>
+            <h2 class="heading-editorial text-4xl lg:text-5xl mt-4 mb-6">
+              Agent<br />Recommendations
+            </h2>
+            <p class="text-ink-muted leading-relaxed">
+              The intelligence layer. The agent takes the full interaction context &mdash;
+              question, answer, and evidence &mdash; to generate targeted learning resources.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8">
+          <div class="relative">
+            <div class="absolute left-6 top-0 bottom-0 w-px bg-paper-dark hidden lg:block"></div>
+
+            <div class="space-y-8">
+              <div class="relative flex gap-6 reveal stagger-1">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  1
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Gather Context</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    The agent receives three inputs from the RAG pipeline:
+                  </p>
+                  <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-cream rounded-lg p-3 text-center">
+                      <p class="text-xs text-slate mb-1">Input 1</p>
+                      <p class="text-sm font-medium">Question</p>
+                    </div>
+                    <div class="bg-cream rounded-lg p-3 text-center">
+                      <p class="text-xs text-slate mb-1">Input 2</p>
+                      <p class="text-sm font-medium">Answer</p>
+                    </div>
+                    <div class="bg-cream rounded-lg p-3 text-center">
+                      <p class="text-xs text-slate mb-1">Input 3</p>
+                      <p class="text-sm font-medium">Chunks</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-2">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  2
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Infer Topic & Intent</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    The agent analyzes the context to determine what the user is trying to learn
+                    and at what level of depth.
+                  </p>
+                  <div class="flex gap-4">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-copper"></span>
+                      <span class="text-sm">Topic extraction</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-amber"></span>
+                      <span class="text-sm">Intent classification</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-3">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  3
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Generate Recommendations</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed">
+                    Based on topic and intent, the agent generates 3&ndash;5 structured resource
+                    recommendations: articles, videos, podcasts, and reference materials.
+                  </p>
+                </div>
+              </div>
+
+              <div class="relative flex gap-6 reveal stagger-4">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-copper text-cream flex items-center justify-center shrink-0 font-mono text-sm font-bold">
+                  4
+                </div>
+                <div class="bg-paper-warm rounded-2xl p-6 border border-paper-dark flex-1">
+                  <h3 class="font-medium text-lg mb-2">Enrich with External Sources</h3>
+                  <p class="text-ink-muted text-sm leading-relaxed mb-4">
+                    Each recommendation is enriched with real content from external APIs:
+                  </p>
+                  <div class="flex flex-wrap gap-3">
+                    <div class="flex items-center gap-2 bg-cream rounded-lg px-4 py-2">
+                      <span class="text-copper font-bold">&#9654;</span>
+                      <span class="text-sm">YouTube API</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-cream rounded-lg px-4 py-2">
+                      <span class="text-copper font-bold">W</span>
+                      <span class="text-sm">Wikipedia API</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

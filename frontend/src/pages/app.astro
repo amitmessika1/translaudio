@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppInterface from '../components/AppInterface';
+---
+
+<Layout title="App" description="Upload audio and start exploring with Translaudio.">
+  <section class="py-12 lg:py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="heading-editorial text-3xl lg:text-4xl">
+          Upload. Transcribe. <span class="italic text-copper">Understand.</span>
+        </h1>
+      </div>
+      <AppInterface client:load />
+    </div>
+  </section>
+</Layout>

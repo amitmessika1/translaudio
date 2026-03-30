@@ -1,0 +1,355 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Features" description="Explore Translaudio's audio processing, RAG-based Q&A, and AI agent capabilities.">
+  <!-- Hero -->
+  <section class="pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h1 class="heading-display text-5xl lg:text-7xl mb-6 reveal stagger-1">
+          Three engines,<br />
+          one <span class="italic text-copper">intelligence.</span>
+        </h1>
+        <p class="text-xl text-ink-muted leading-relaxed reveal stagger-2">
+          Each layer builds on the last. Transcription feeds retrieval. Retrieval feeds the agent.
+          The result is a system that doesn't just answer &mdash; it teaches.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Feature 1: Audio Processing -->
+  <section class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        <div class="reveal">
+          <div class="flex items-center gap-4 mb-8">
+            <span class="text-label text-copper">01</span>
+            <div class="waveform-line flex-1"></div>
+          </div>
+          <h2 class="heading-editorial text-4xl lg:text-5xl mb-6">
+            Audio<br />Processing
+          </h2>
+          <p class="text-ink-muted text-lg leading-relaxed mb-8">
+            The foundation layer. Drop in any audio file and Translaudio handles the rest &mdash;
+            transcription, language identification, and translation happen automatically.
+          </p>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Multi-format support</p>
+                <p class="text-sm text-ink-muted">MP3, WAV, M4A, FLAC, OGG, and more. If Whisper can read it, Translaudio can process it.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Automatic language detection</p>
+                <p class="text-sm text-ink-muted">No need to specify the language. Whisper identifies it and transcribes accordingly.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Translation pipeline</p>
+                <p class="text-sm text-ink-muted">Non-English audio gets translated automatically, making the content queryable in English.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Visual: mock transcription output -->
+        <div class="reveal stagger-2">
+          <div class="bg-ink rounded-2xl p-6 lg:p-8 text-paper font-mono text-sm">
+            <div class="flex items-center gap-2 mb-6">
+              <div class="w-3 h-3 rounded-full bg-copper/40"></div>
+              <div class="w-3 h-3 rounded-full bg-amber/40"></div>
+              <div class="w-3 h-3 rounded-full bg-sage/40"></div>
+              <span class="ml-auto text-xs text-slate">transcription_output</span>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <span class="text-slate">&#47;&#47; Detected language</span><br />
+                <span class="text-copper-light">language</span><span class="text-slate">:</span> <span class="text-amber">"Hebrew"</span>
+              </div>
+              <div>
+                <span class="text-slate">&#47;&#47; Auto-translated to English</span><br />
+                <span class="text-copper-light">translation</span><span class="text-slate">:</span> <span class="text-amber">"enabled"</span>
+              </div>
+              <div class="border-t border-ink-muted pt-3 mt-3">
+                <span class="text-slate">&#47;&#47; Timestamped chunks</span><br />
+                <span class="text-paper-dark">[00:00 → 00:14]</span><br />
+                <span class="text-amber">"In this lecture we will explore<br />the fundamentals of neural..."</span>
+              </div>
+              <div>
+                <span class="text-paper-dark">[00:14 → 00:31]</span><br />
+                <span class="text-amber">"...network architectures, starting<br />with the perceptron model and..."</span>
+              </div>
+              <div>
+                <span class="text-paper-dark">[00:31 → 00:48]</span><br />
+                <span class="text-amber">"...building up to transformer-based<br />attention mechanisms..."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 2: RAG -->
+  <section class="py-24 lg:py-32 bg-paper-warm">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        <!-- Visual: Q&A interaction -->
+        <div class="order-2 lg:order-1 reveal stagger-2">
+          <div class="space-y-4">
+            <!-- Question bubble -->
+            <div class="flex justify-end">
+              <div class="bg-ink text-cream rounded-2xl rounded-br-md px-6 py-4 max-w-sm">
+                <p class="text-sm">What did the speaker say about attention mechanisms?</p>
+              </div>
+            </div>
+
+            <!-- Retrieval indicator -->
+            <div class="flex items-center gap-3 py-2">
+              <div class="flex items-end gap-[2px] h-4">
+                <span class="waveform-bar h-2" style="animation-delay: 0s; width: 2px"></span>
+                <span class="waveform-bar h-3" style="animation-delay: 0.1s; width: 2px"></span>
+                <span class="waveform-bar h-4" style="animation-delay: 0.2s; width: 2px"></span>
+                <span class="waveform-bar h-3" style="animation-delay: 0.3s; width: 2px"></span>
+                <span class="waveform-bar h-2" style="animation-delay: 0.4s; width: 2px"></span>
+              </div>
+              <span class="text-xs text-slate font-mono">Searching 48 chunks...</span>
+            </div>
+
+            <!-- Retrieved chunks -->
+            <div class="bg-cream border border-paper-dark rounded-xl p-4">
+              <p class="text-label text-copper mb-2">Retrieved Evidence</p>
+              <div class="space-y-2 text-sm text-ink-muted">
+                <p class="pl-3 border-l-2 border-copper/30">[00:31] "...transformer-based attention mechanisms allow the model to focus on relevant parts..."</p>
+                <p class="pl-3 border-l-2 border-copper/30">[02:15] "...self-attention computes relationships between all positions in a sequence..."</p>
+              </div>
+            </div>
+
+            <!-- Answer bubble -->
+            <div class="flex justify-start">
+              <div class="bg-paper border border-paper-dark rounded-2xl rounded-bl-md px-6 py-4 max-w-sm">
+                <p class="text-sm leading-relaxed">
+                  The speaker described attention mechanisms as a way for models to focus on relevant parts of input sequences. They specifically discussed self-attention in transformers, which computes relationships between all positions simultaneously.
+                </p>
+                <p class="text-xs text-copper mt-3 font-mono">Grounded in 2 transcript chunks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2 reveal">
+          <div class="flex items-center gap-4 mb-8">
+            <span class="text-label text-copper">02</span>
+            <div class="waveform-line flex-1"></div>
+          </div>
+          <h2 class="heading-editorial text-4xl lg:text-5xl mb-6">
+            RAG-based<br />Q&A
+          </h2>
+          <p class="text-ink-muted text-lg leading-relaxed mb-8">
+            Not just keyword matching. Translaudio converts your question into a vector embedding, finds the most semantically relevant transcript chunks, and generates an answer grounded in evidence.
+          </p>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Semantic vector search</p>
+                <p class="text-sm text-ink-muted">Embeddings stored in PostgreSQL with pgvector. Finds meaning, not just words.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Grounded answers</p>
+                <p class="text-sm text-ink-muted">The LLM only uses transcript content as source material. No hallucinated facts.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-copper mt-2.5 shrink-0"></span>
+              <div>
+                <p class="font-medium mb-1">Transparent retrieval</p>
+                <p class="text-sm text-ink-muted">See which transcript chunks were used. Full traceability to the source.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 3: AI Agent -->
+  <section class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        <div class="reveal">
+          <div class="flex items-center gap-4 mb-8">
+            <span class="text-label text-copper">03</span>
+            <div class="waveform-line flex-1"></div>
+          </div>
+          <h2 class="heading-editorial text-4xl lg:text-5xl mb-6">
+            AI Learning<br />Agent
+          </h2>
+          <p class="text-ink-muted text-lg leading-relaxed mb-8">
+            This is what transforms Translaudio from a Q&A tool into a learning platform.
+            The agent doesn't just answer &mdash; it figures out what you're trying to learn
+            and finds the best resources to help.
+          </p>
+          <div class="space-y-6">
+            <div>
+              <p class="text-label text-copper mb-3">Analyzes</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-4 py-2 bg-paper-warm border border-paper-dark rounded-lg text-sm">Your question</span>
+                <span class="px-4 py-2 bg-paper-warm border border-paper-dark rounded-lg text-sm">Generated answer</span>
+                <span class="px-4 py-2 bg-paper-warm border border-paper-dark rounded-lg text-sm">Transcript evidence</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-label text-copper mb-3">Infers</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-4 py-2 bg-paper-warm border border-paper-dark rounded-lg text-sm">Learning topic</span>
+                <span class="px-4 py-2 bg-paper-warm border border-paper-dark rounded-lg text-sm">User intent</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-label text-copper mb-3">Recommends</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-4 py-2 bg-ink text-cream rounded-lg text-sm">Articles</span>
+                <span class="px-4 py-2 bg-ink text-cream rounded-lg text-sm">Videos</span>
+                <span class="px-4 py-2 bg-ink text-cream rounded-lg text-sm">Podcasts</span>
+                <span class="px-4 py-2 bg-ink text-cream rounded-lg text-sm">References</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual: Agent recommendation output -->
+        <div class="reveal stagger-2">
+          <div class="bg-paper-warm rounded-2xl border border-paper-dark p-6 lg:p-8">
+            <div class="flex items-center gap-2 mb-6">
+              <div class="flex items-end gap-[2px] h-4">
+                <span class="waveform-bar h-2" style="animation-delay: 0s; width: 2px"></span>
+                <span class="waveform-bar h-3" style="animation-delay: 0.1s; width: 2px"></span>
+                <span class="waveform-bar h-4" style="animation-delay: 0.2s; width: 2px"></span>
+                <span class="waveform-bar h-3" style="animation-delay: 0.3s; width: 2px"></span>
+              </div>
+              <span class="text-label text-copper ml-1">Agent Output</span>
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-slate font-mono w-16 shrink-0">topic</span>
+                <span class="text-ink font-medium">Transformer Attention Mechanisms</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-slate font-mono w-16 shrink-0">intent</span>
+                <span class="text-ink font-medium">Deep conceptual understanding</span>
+              </div>
+            </div>
+
+            <div class="waveform-line mb-6 opacity-40"></div>
+
+            <p class="text-label text-copper mb-4">Recommended Resources</p>
+            <div class="space-y-3">
+              <a class="block bg-cream rounded-xl p-4 border border-paper-dark hover:border-copper/30 transition-colors group">
+                <div class="flex items-start gap-3">
+                  <span class="text-lg mt-0.5">&#9654;</span>
+                  <div>
+                    <p class="font-medium text-sm group-hover:text-copper transition-colors">Attention Is All You Need &mdash; Explained</p>
+                    <p class="text-xs text-slate mt-1">YouTube &middot; 18 min</p>
+                  </div>
+                </div>
+              </a>
+              <a class="block bg-cream rounded-xl p-4 border border-paper-dark hover:border-copper/30 transition-colors group">
+                <div class="flex items-start gap-3">
+                  <span class="text-lg mt-0.5">W</span>
+                  <div>
+                    <p class="font-medium text-sm group-hover:text-copper transition-colors">Transformer (deep learning architecture)</p>
+                    <p class="text-xs text-slate mt-1">Wikipedia &middot; Reference</p>
+                  </div>
+                </div>
+              </a>
+              <a class="block bg-cream rounded-xl p-4 border border-paper-dark hover:border-copper/30 transition-colors group">
+                <div class="flex items-start gap-3">
+                  <span class="text-lg mt-0.5">&#9783;</span>
+                  <div>
+                    <p class="font-medium text-sm group-hover:text-copper transition-colors">The Illustrated Transformer</p>
+                    <p class="text-xs text-slate mt-1">Article &middot; Jay Alammar</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Database section -->
+  <section class="py-24 lg:py-32 bg-ink text-cream">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center mb-16">
+        <p class="text-label text-copper-light mb-4 reveal">Under the Hood</p>
+        <h2 class="heading-editorial text-4xl lg:text-5xl mb-6 reveal stagger-1">
+          Structured for retrieval.
+        </h2>
+        <p class="text-paper-dark text-lg leading-relaxed reveal stagger-2">
+          Every audio session is stored with full metadata, timestamped chunks and vector embeddings for similarity search.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 reveal stagger-3">
+        <div class="bg-ink-light rounded-2xl p-8 border border-ink-muted">
+          <h3 class="heading-editorial text-2xl mb-4 text-cream">Sessions Table</h3>
+          <div class="space-y-2 font-mono text-sm">
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">id</span>
+              <span class="text-slate">UUID</span>
+            </div>
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">transcription</span>
+              <span class="text-slate">TEXT</span>
+            </div>
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">translation</span>
+              <span class="text-slate">TEXT</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-copper-light">summary</span>
+              <span class="text-slate">TEXT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-ink-light rounded-2xl p-8 border border-ink-muted">
+          <h3 class="heading-editorial text-2xl mb-4 text-cream">Chunks Table</h3>
+          <div class="space-y-2 font-mono text-sm">
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">id</span>
+              <span class="text-slate">UUID</span>
+            </div>
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">content</span>
+              <span class="text-slate">TEXT</span>
+            </div>
+            <div class="flex justify-between border-b border-ink-muted pb-2">
+              <span class="text-copper-light">timestamp</span>
+              <span class="text-slate">INTERVAL</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-copper-light">embedding</span>
+              <span class="text-slate">VECTOR(1536)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
