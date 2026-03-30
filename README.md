@@ -292,13 +292,17 @@ Then recommends relevant learning materials.
 ## 📸 Screenshots
 
 ### 🏠 Homepage
-![Homepage](./screenshots/home.png)
+<p align="center">
+  <img src="./screenshots/home.png" width="800"/>
+</p>
 
 ### 📝 Transcript View
-![Transcript View](./screenshots/transcript.png)
+<p align="center">
+  <img src="./screenshots/transcript.png" width="800"/>
+</p>
 
-### 💬 Q&A
-![Q&A](./screenshots/qa.png)
-
-### 🤖 Recommendations
-![Recommendations](./screenshots/recommendations.png)
+### 💬 Q&A & 🤖 Recommendations
+<p align="center">
+  <img src="./screenshots/qa.png" width="45%"/>
+  <img src="./screenshots/recommendations.png" width="45%"/>
+</p>
