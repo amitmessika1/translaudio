@@ -89,25 +89,25 @@ LLM Answer Generation (RAG)
 AI Agent → Learning Recommendations
 ```
 
-## 🧱 Tech Stack
+##  Tech Stack
 
-### 🖥️ Frontend
+###  Frontend
 - Astro  
 - React (interactive components)  
 - TailwindCSS  
 - TypeScript  
 
-### ⚙️ Backend
+###  Backend
 - FastAPI  
 - SQLAlchemy  
 - OpenAI API  
 - Whisper (local model)  
 
-### 🗄️ Database
+###  Database
 - PostgreSQL  
 - pgvector (vector similarity search)  
 
-### 🔗 External APIs
+###  External APIs
 - OpenAI (LLM + embeddings)  
 - YouTube Data API  
 - Wikipedia API
@@ -126,7 +126,7 @@ AI Agent → Learning Recommendations
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 Translaudio/
@@ -291,17 +291,17 @@ Then recommends relevant learning materials.
 
 ## 📸 Screenshots
 
-### 🏠 Homepage
+###  Homepage
 <p align="center">
-  <img src="./screenshots/home.png" width="800"/>
+  <img src="./screenshots/home.png" width="700"/>
 </p>
 
-### 📝 Transcript View
+###  Transcript View
 <p align="center">
-  <img src="./screenshots/transcript.png" width="800"/>
+  <img src="./screenshots/transcript.png" width="700"/>
 </p>
 
-### 💬 Q&A & 🤖 Recommendations
+###  Q&A &  Recommendations
 <p align="center">
   <img src="./screenshots/qa.png" width="45%"/>
   <img src="./screenshots/recommendations.png" width="45%"/>
