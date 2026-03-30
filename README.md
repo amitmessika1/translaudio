@@ -296,20 +296,25 @@ Then recommends relevant learning materials.
 
 ## 📸 Screenshots
 
+### ⬆️ Upload & Processing
+
+<p align="center">
+  <img src="./screenshots/Screenshot 2026-03-30 215425.jpg" width="650"/>
+</p>
 
 ### 📝 Transcript View
 <p align="center">
-  <img src="./screenshots/transcript.png" width="700"/>
+  <img src="./screenshots/transcript.png" width="650"/>
 </p>
 
 ### 💬 Q&A
 <p align="center">
-  <img src="./screenshots/qa.png" width="700"/>
+  <img src="./screenshots/qa.png" width="650"/>
 </p>
 
 ### 🤖 Recommendations
 <p align="center">
-  <img src="./screenshots/recommendations.png" width="700"/>
+  <img src="./screenshots/recommendations.png" width="650"/>
 </p>
 
 ##  Author
