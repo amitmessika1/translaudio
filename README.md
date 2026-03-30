@@ -27,7 +27,7 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 ##  Features
 
 ### 🎙️ Audio Processing
-- Supports multiple formats: `mp3`, `wav`, `m4a`, `flac`, `ogg`, etc.
+- Supports multiple formats: `.mp3` `.wav` `.m4a` `.flac` `.aac` `.ogg` `.wma` `.opus` `.aiff` `.ape`
 - Automatic language detection
 - Optional translation to target language
 - Timestamped transcript generation
@@ -60,6 +60,13 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 - Summary generation
 - Clean, modern UI with smooth animations
 
+- **Transcription** — Whisper transcribes any audio format with automatic language detection
+- **Translation** — Auto-translates to a target language via GPT when the source differs
+- **Semantic Search** — pgvector-powered cosine similarity search over transcript chunks
+- **RAG-based Q&A** — Ask questions and get answers grounded in actual transcript content, with timestamped source citations
+- **AI Agent Recommendations** — Analyzes your question and the answer to recommend articles, YouTube videos, podcasts, and Wikipedia references
+- **Summarization** — Concise summary of the full transcript
+ 
 ---
 
 ##  Architecture
@@ -102,7 +109,20 @@ AI Agent → Learning Recommendations
 ### 🔗 External APIs
 - OpenAI (LLM + embeddings)  
 - YouTube Data API  
-- Wikipedia API  
+- Wikipedia API
+```
+
+| Layer | Technology |
+|---|---|
+| Frontend | Astro, React, TypeScript, Tailwind CSS |
+| Backend | FastAPI (Python) |
+| Transcription | OpenAI Whisper (`base` model, local) |
+| LLM | OpenAI GPT-4.1-mini |
+| Embeddings | OpenAI `text-embedding-3-small` (1536 dims) |
+| Vector DB | PostgreSQL + pgvector |
+| ORM | SQLAlchemy |
+| External APIs | YouTube Data API v3, Wikipedia API |
+| Containerization | Docker, Docker Compose |
 
 ---
 
@@ -111,22 +131,28 @@ AI Agent → Learning Recommendations
 ```
 Translaudio/
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── layouts/
-│   │   ├── pages/
-│   │   └── styles/
-│   └── package.json
-│
+│   └── src/
+│       ├── components/
+│       │   ├── AppInterface.tsx       # Main app UI (upload, tabs, Q&A, recommendations)
+│       │   ├── WaveformVisualizer.tsx # Animated canvas waveform
+│       │   ├── ScrollReveal.tsx       # Intersection Observer scroll animations
+│       │   └── MobileMenu.tsx         # Responsive hamburger nav
+│       ├── layouts/
+│       │   └── Layout.astro
+│       └── pages/
+│           ├── index.astro
+│           ├── app.astro
+│           ├── features.astro
+│           ├── how-it-works.astro
+│           ├── api.astro
+│           └── about.astro
 ├── backend/
-│   ├── server.py
-│   ├── models.py
-│   ├── db.py
-│   ├── init.sql
-│   └── Dockerfile
-│
-├── docker-compose.yml
-└── README.md
+│   ├── server.py       # FastAPI app — all endpoints
+│   ├── db.py           # SQLAlchemy engine & session
+│   ├── models.py       # Session & TranscriptChunk ORM models
+│   ├── init.sql        # Enables pgvector extension
+│   └── Dockerfile      # PostgreSQL + pgvector image
+└── docker-compose.yml
 ```
 
 ---
@@ -149,6 +175,13 @@ OPENAI_API_KEY=your_openai_key
 DATABASE_URL=postgresql://translaudio:translaudio@localhost:5432/translaudio
 YOUTUBE_API_KEY=your_youtube_api_key
 ```
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | ✅ | PostgreSQL connection string |
+| `OPENAI_API_KEY` | ✅ | OpenAI API key (Whisper + GPT + Embeddings) |
+| `YOUTUBE_API_KEY` | ⬜ | YouTube Data API v3 key for video recommendations |
+ 
 
 ### 3. Run with Docker
 
@@ -175,6 +208,15 @@ npm run dev
 ---
 
 ## 🔌 API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/upload` | Upload audio file — returns transcription, translation, session ID, and segments |
+| `POST` | `/summarize` | Summarize a given text |
+| `POST` | `/search` | Semantic search over transcript chunks by session |
+| `POST` | `/ask` | RAG-based Q&A — returns answer + timestamped source chunks |
+| `POST` | `/recommend-resources` | AI agent recommends articles, videos, podcasts, and references |
+| `GET` | `/` | Health check |
 
 ### Upload Audio
 ```
