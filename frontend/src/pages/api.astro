@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const endpoints = [
+  {
+    method: 'POST',
+    path: '/upload',
+    title: 'Upload & Process Audio',
+    description: 'Upload an audio file for transcription, language detection, translation, chunking, and embedding. Returns the session ID and processed transcript.',
+    requestBody: `{
+  "file": "<audio_file>",
+  "language": "auto"  // optional
+}`,
+    responseBody: `{
+  "session_id": "a1b2c3d4-...",
+  "transcription": "In this lecture...",
+  "language_detected": "Hebrew",
+  "translation": "In this lecture...",
+  "chunks_created": 48
+}`,
+    contentType: 'multipart/form-data',
+  },
+  {
+    method: 'POST',
+    path: '/summarize',
+    title: 'Generate Summary',
+    description: 'Generate a concise summary of the transcript for a given session. Uses the stored transcript text to produce an overview.',
+    requestBody: `{
+  "session_id": "a1b2c3d4-..."
+}`,
+    responseBody: `{
+  "session_id": "a1b2c3d4-...",
+  "summary": "This lecture covers the fundamentals
+    of neural network architectures,
+    from perceptrons to transformers..."
+}`,
+    contentType: 'application/json',
+  },
+  {
+    method: 'POST',
+    path: '/ask',
+    title: 'Ask Questions (RAG)',
+    description: 'Ask a natural language question about the audio content. Uses semantic search to retrieve relevant transcript chunks, then generates a grounded answer.',
+    requestBody: `{
+  "session_id": "a1b2c3d4-...",
+  "question": "What did the speaker say
+    about attention mechanisms?"
+}`,
+    responseBody: `{
+  "answer": "The speaker described attention
+    mechanisms as a way for models to...",
+  "sources": [
+    {
+      "chunk_id": "x7y8z9",
+      "timestamp": "00:31",
+      "content": "...transformer-based attention...",
+      "similarity": 0.94
+    }
+  ]
+}`,
+    contentType: 'application/json',
+  },
+  {
+    method: 'POST',
+    path: '/recommend-resources',
+    title: 'Agent Recommendations',
+    description: 'The AI agent analyzes the question, answer, and transcript evidence to infer the learning topic and user intent, then generates enriched learning resources.',
+    requestBody: `{
+  "session_id": "a1b2c3d4-...",
+  "question": "What are attention mechanisms?",
+  "answer": "The speaker described...",
+  "chunks": ["...transformer-based..."]
+}`,
+    responseBody: `{
+  "topic": "Transformer Attention Mechanisms",
+  "intent": "Deep conceptual understanding",
+  "resources": [
+    {
+      "title": "Attention Is All You Need",
+      "type": "video",
+      "source": "youtube",
+      "url": "https://...",
+      "duration": "18 min"
+    },
+    {
+      "title": "Transformer (architecture)",
+      "type": "reference",
+      "source": "wikipedia",
+      "url": "https://..."
+    }
+  ]
+}`,
+    contentType: 'application/json',
+  },
+];
+---
+
+<Layout title="API Reference" description="Complete API reference for Translaudio endpoints.">
+  <!-- Hero -->
+  <section class="pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-end">
+        <div>
+          <h1 class="heading-display text-5xl lg:text-7xl mb-6 reveal stagger-1">
+            Four endpoints.<br />
+            <span class="italic text-copper">Full pipeline.</span>
+          </h1>
+          <p class="text-xl text-ink-muted leading-relaxed reveal stagger-2">
+            Everything from audio upload to learning recommendations.
+            REST endpoints, JSON responses.
+          </p>
+        </div>
+        <div class="reveal stagger-3">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Quick reference table -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="bg-paper-warm rounded-2xl border border-paper-dark overflow-hidden reveal">
+        <div class="p-6 border-b border-paper-dark">
+          <h2 class="heading-editorial text-2xl">Quick Reference</h2>
+        </div>
+        <div class="divide-y divide-paper-dark">
+          {endpoints.map((ep) => (
+            <a href={`#${ep.path.slice(1)}`} class="flex items-center gap-4 px-6 py-4 hover:bg-cream transition-colors group">
+              <span class="px-3 py-1 bg-copper text-cream text-xs font-mono font-bold rounded">
+                {ep.method}
+              </span>
+              <code class="font-mono text-sm flex-1">{ep.path}</code>
+              <span class="text-sm text-ink-muted hidden sm:block">{ep.title}</span>
+              <svg class="w-4 h-4 text-slate group-hover:text-copper transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Endpoint details -->
+  {endpoints.map((ep, idx) => (
+    <section id={ep.path.slice(1)} class={`py-16 lg:py-24 ${idx % 2 === 1 ? 'bg-paper-warm' : ''}`}>
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12">
+          <!-- Description -->
+          <div class="reveal">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="px-3 py-1 bg-copper text-cream text-xs font-mono font-bold rounded">
+                {ep.method}
+              </span>
+              <code class="font-mono text-lg">{ep.path}</code>
+            </div>
+            <h3 class="heading-editorial text-3xl mb-4">{ep.title}</h3>
+            <p class="text-ink-muted leading-relaxed mb-6">{ep.description}</p>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-slate">Content-Type:</span>
+              <code class="font-mono text-xs bg-paper-warm px-2 py-1 rounded">{ep.contentType}</code>
+            </div>
+          </div>
+
+          <!-- Code blocks -->
+          <div class="space-y-4 reveal stagger-2">
+            <div>
+              <p class="text-label text-copper mb-2">Request</p>
+              <div class="code-block">
+                <pre set:html={ep.requestBody
+                  .replace(/(".*?")/g, '<span class="string">$1</span>')
+                  .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
+                  .replace(/(&lt;.*?&gt;)/g, '<span class="comment">$1</span>')} />
+              </div>
+            </div>
+            <div>
+              <p class="text-label text-copper mb-2">Response</p>
+              <div class="code-block">
+                <pre set:html={ep.responseBody
+                  .replace(/(".*?")/g, '<span class="string">$1</span>')
+                  .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
+                  .replace(/(\d+\.?\d*)/g, '<span class="keyword">$1</span>')} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+</Layout>

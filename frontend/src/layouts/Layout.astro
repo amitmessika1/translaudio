@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+import MobileMenu from '../components/MobileMenu';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'AI-powered Audio Intelligence Platform' } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/app', label: 'App' },
+  { href: '/features', label: 'Features' },
+  { href: '/how-it-works', label: 'How It Works' },
+  { href: '/api', label: 'API' },
+  { href: '/about', label: 'About' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <title>{title} | Translaudio</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-md border-b border-ink/5">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="flex items-end gap-[3px] h-6">
+            <span class="waveform-bar h-3" style="animation-delay: 0s"></span>
+            <span class="waveform-bar h-5" style="animation-delay: 0.15s"></span>
+            <span class="waveform-bar h-6" style="animation-delay: 0.3s"></span>
+            <span class="waveform-bar h-4" style="animation-delay: 0.45s"></span>
+            <span class="waveform-bar h-5" style="animation-delay: 0.6s"></span>
+          </div>
+          <span class="font-serif text-xl tracking-tight">Translaudio</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'text-sm font-medium link-underline transition-colors',
+                currentPath === link.href ? 'text-copper' : 'text-ink-muted hover:text-ink',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <!-- Desktop CTA -->
+
+        <!-- Mobile Menu -->
+        <MobileMenu currentPath={currentPath} client:load />
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-16">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-ink text-paper">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <!-- Brand -->
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="flex items-end gap-[3px] h-5">
+                <span class="waveform-bar h-2" style="background-color: var(--color-copper); animation-delay: 0s"></span>
+                <span class="waveform-bar h-4" style="background-color: var(--color-copper); animation-delay: 0.15s"></span>
+                <span class="waveform-bar h-5" style="background-color: var(--color-copper); animation-delay: 0.3s"></span>
+                <span class="waveform-bar h-3" style="background-color: var(--color-copper); animation-delay: 0.45s"></span>
+                <span class="waveform-bar h-4" style="background-color: var(--color-copper); animation-delay: 0.6s"></span>
+              </div>
+              <span class="font-serif text-lg">Translaudio</span>
+            </div>
+            <p class="text-paper-dark text-sm leading-relaxed max-w-sm">
+              Transform audio into actionable knowledge with RAG-powered intelligence and AI-driven learning recommendations.
+            </p>
+          </div>
+
+
+          <!-- Tech -->
+          <div>
+            <p class="text-label text-slate mb-4">Built With</p>
+            <ul class="space-y-2 text-sm text-paper-dark">
+              <li>OpenAI Whisper</li>
+              <li>PostgreSQL + pgvector</li>
+              <li>RAG Pipeline</li>
+              <li>YouTube & Wikipedia APIs</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="waveform-line mb-6 opacity-20"></div>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate">
+          <p>&copy; {new Date().getFullYear()} Translaudio. Audio intelligence, redefined.</p>
+          <div class="flex items-center gap-4">
+            <a href="https://github.com/amitmessika1/translaudio" target="_blank" rel="noopener" class="hover:text-copper transition-colors">
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scroll reveal observer -->
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

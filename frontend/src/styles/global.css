@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* ── Theme tokens ── */
+@theme {
+  --color-ink: #2a2a2e;
+  --color-ink-light: #3a3a3f;
+  --color-ink-muted: #62626a;
+  --color-paper: #f0eeeb;
+  --color-paper-warm: #e6e3df;
+  --color-paper-dark: #d1cec9;
+  --color-copper: #e8614d;
+  --color-copper-light: #f07b6a;
+  --color-copper-dark: #c44535;
+  --color-amber: #e8914d;
+  --color-sage: #5a8a7a;
+  --color-slate: #7a7a82;
+  --color-cream: #f7f6f4;
+
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-copper);
+  color: var(--color-cream);
+}
+
+/* ── Editorial typography ── */
+.heading-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.heading-editorial {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.text-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Waveform decoration ── */
+.waveform-line {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-copper) 0px,
+    var(--color-copper) 8px,
+    transparent 8px,
+    transparent 12px
+  );
+}
+
+.waveform-bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 1px;
+  background-color: var(--color-copper);
+  animation: waveform-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes waveform-pulse {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+/* ── Scroll-reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Stagger delays ── */
+.stagger-1 { transition-delay: 0.05s; }
+.stagger-2 { transition-delay: 0.1s; }
+.stagger-3 { transition-delay: 0.15s; }
+.stagger-4 { transition-delay: 0.2s; }
+.stagger-5 { transition-delay: 0.25s; }
+.stagger-6 { transition-delay: 0.3s; }
+
+/* ── Link underline effect ── */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background-color: currentColor;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Code blocks ── */
+.code-block {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.code-block .keyword { color: var(--color-copper-light); }
+.code-block .string { color: var(--color-amber); }
+.code-block .comment { color: var(--color-slate); }
+.code-block .method { color: #7eb8a0; }
+.code-block .url { color: var(--color-copper-light); }
+
+/* ── Page transition ── */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: page-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
