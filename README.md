@@ -1,8 +1,30 @@
+<div align="center">
+
 #  Translaudio
 
-> Your audio knows more than you think.
+### Your audio knows more than you think.
 
 An AI-powered audio intelligence platform that transforms raw audio into a searchable, interactive knowledge system using transcription, semantic retrieval (RAG) and an AI agent for learning recommendations.
+
+<p>
+  <a href="https://github.com/amitmessika1/translaudio/stargazers">
+    <img src="https://img.shields.io/github/stars/your-username/translaudio?style=for-the-badge" alt="stars" />
+  </a>
+  <a href="https://github.com/amitmessika1/translaudio/network/members">
+    <img src="https://img.shields.io/github/forks/your-username/translaudio?style=for-the-badge" alt="forks" />
+  </a>
+  <a href="https://github.com/amitmessika1/translaudio/issues">
+    <img src="https://img.shields.io/github/issues/your-username/translaudio?style=for-the-badge" alt="issues" />
+  </a>
+  <img src="https://img.shields.io/badge/Built%20With-Astro%20%7C%20FastAPI%20%7C%20PostgreSQL-blue?style=for-the-badge" alt="stack" />
+</p>
+
+<p>
+  <a href="https://your-demo-link"><strong>Live Demo</strong></a>
+  ·
+  <a href="https://github.com/your-username/translaudio"><strong>Repository</strong></a>
+</p>
+</div>
 
 <p align="center">
   <img src="./screenshots/home.png" width="650"/>
@@ -313,36 +335,6 @@ Then recommends relevant learning materials.
 
 Built by **Amit Messika**
 
-
-
-<div align="center">
-
-# 🎧 Translaudio
-
-### Your audio knows more than you think.
-
-An AI-powered audio intelligence platform that transforms raw audio into a searchable, interactive knowledge system using transcription, semantic retrieval (RAG), and AI-curated learning recommendations.
-
-<p>
-  <a href="https://github.com/your-username/translaudio/stargazers">
-    <img src="https://img.shields.io/github/stars/your-username/translaudio?style=for-the-badge" alt="stars" />
-  </a>
-  <a href="https://github.com/your-username/translaudio/network/members">
-    <img src="https://img.shields.io/github/forks/your-username/translaudio?style=for-the-badge" alt="forks" />
-  </a>
-  <a href="https://github.com/your-username/translaudio/issues">
-    <img src="https://img.shields.io/github/issues/your-username/translaudio?style=for-the-badge" alt="issues" />
-  </a>
-  <img src="https://img.shields.io/badge/Built%20With-Astro%20%7C%20FastAPI%20%7C%20PostgreSQL-blue?style=for-the-badge" alt="stack" />
-</p>
-
-<p>
-  <a href="https://your-demo-link"><strong>Live Demo</strong></a>
-  ·
-  <a href="https://github.com/your-username/translaudio"><strong>Repository</strong></a>
-</p>
-
-</div>
 
 
 
