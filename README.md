@@ -33,7 +33,7 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 
 ##  Features
 
-### 🎙️ Audio Processing
+###  Audio Processing
 - Supports multiple formats: `.mp3` `.wav` `.m4a` `.flac` `.aac` `.ogg` `.wma` `.opus` `.aiff` `.ape`
 - Automatic transcription using Whisper
 - Automatic language detection
@@ -42,14 +42,14 @@ This project demonstrates a full **end-to-end AI pipeline**, combining:
 
 ---
 
-### 🧠 RAG-based Q&A
+###  RAG-based Q&A
 - Ask natural language questions about your audio
 - Retrieve relevant transcript chunks using vector similarity
 - Generate grounded answers based only on transcript evidence
 
 ---
 
-### 🤖 AI Agent Recommendations
+###  AI Agent Recommendations
 - Understands your **question + answer + context**
 - Infers topic and learning intent
 - Recommends:
@@ -162,7 +162,7 @@ Translaudio/
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ### 1. Clone the repository
 
@@ -206,7 +206,7 @@ npm run dev
 
 ---
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
