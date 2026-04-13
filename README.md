@@ -294,6 +294,46 @@ Then recommends relevant learning materials.
 
 ---
 
+## Deployment
+
+This project was deployed on AWS using an EC2 instance for application hosting and Amazon S3 for audio file storage.
+
+### Architecture Overview
+
+The system consists of three main parts:
+
+- **Frontend**: Built locally and served as static files from `frontend/dist`
+- **Backend**: FastAPI application running on an AWS EC2 instance
+- **Storage**: Amazon S3 bucket used to store uploaded audio files
+
+### Runtime Flow
+
+1. A user uploads an audio file from the frontend.
+2. The FastAPI backend receives the file.
+3. The file is temporarily stored on the EC2 instance.
+4. Audio processing is performed using `ffmpeg` and Whisper.
+5. The uploaded file is sent to Amazon S3.
+6. Metadata and transcript-related data are stored in PostgreSQL.
+7. The temporary local file is removed from the server.
+
+### AWS Services Used
+
+- **EC2** for hosting the FastAPI server
+- **S3** for persistent audio storage
+- **IAM Role** attached to the EC2 instance to allow secure access to S3 without embedding AWS credentials in code
+
+### Environment Variables
+
+The backend expects the following environment variables:
+
+```env
+OPENAI_API_KEY=
+DATABASE_URL=
+S3_BUCKET_NAME=
+S3_REGION=
+
+---
+
 ## 📸 Screenshots
 
 ### ⬆️ Upload & Processing
